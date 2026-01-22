@@ -1,0 +1,29 @@
+
+# SMTP Server Settings
+$smtpServer = "smtp server"
+$smtpUser = "USRE"
+$smtpPassword = "**********"
+
+# Sender and Recipient Mail Addresses
+$from = "FROM MAIL ADDRESS"
+$to = "TO MAIL ADDRESS"
+# Determine Start Time
+$lastHour = (Get-Date).AddHours(-1)
+
+#EventIDList
+$eventIDs = @(4625, 4648, 4703, 1102, 7045)
+
+#ControlEvents
+foreach ($id in $eventIDs) {
+	$events = Get-WinEvent -FilterHashtable @{Logname='Security'; ID=$id; StartTime=$lastHour}
+	if ($events) {
+		$subject = "Alert: Detected Event ID $id"
+		$body = "Detected event ID $id on the following system: $($events[0].MachineName) at $($events[0].TimeCreated)"
+				
+		# Create Credential Object for SMTP
+		$smtpCred = New-Object System.Management.Automation.PSCredential -ArgumentList $smtpUser, $($smtpPassword | ConvertTo-SecureString -AsPlainText -Force)
+				
+		# Send Email Notification
+		Send-MailMessage -SmtpServer $smtpServer -From $from -To $to -Subject $subject -Body $body -Credential $smtpCred -UseSsl
+	}
+}
