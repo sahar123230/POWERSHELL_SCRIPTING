@@ -17,12 +17,12 @@ function IpCheck($ip){
 
 function sendMail($message) {
 
-	$smtpServer = "smtp.letsdefend.io"
-	$smtpUser = "labuser"
+	$smtpServer = "SMTP SERVER"
+	$smtpUser = "USER"
 	$smtpPassword = "**********"
 
-	$from = "alerter@letsdefend.io"
-	$to = "admin@letsdefend.io"
+	$from = "MAIL ADDRESS"
+	$to = "MAIL ADRESS"
 
 	$smtpCred = New-Object System.Management.Automation.PSCredential -ArgumentList $smtpUser, $($smtpPassword | ConvertTo-SecureString -AsPlainText -Force)
 			
